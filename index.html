@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Подарочный сертификат — Определение типажа | @tipazh_style</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Marck+Script&family=Montserrat:wght@300;400;500;600&family=Unbounded:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #131c17;
+            --bg-forest: #1e2d24;
+            --bg-moss: #283a2f;
+            --pink-main: #eab3c6;
+            --pink-soft: #f7dbe5;
+            --pink-glow: rgba(234, 179, 198, 0.25);
+            --text-light: #f2f5f3;
+            --text-muted: #9eb0a4;
+            --border-pink: rgba(234, 179, 198, 0.32);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-light);
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Атмосферный фон с дымкой и свечением */
+        .ambient-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -3;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(45, 70, 56, 0.55) 0%, transparent 50%),
+                radial-gradient(circle at 80% 75%, rgba(234, 179, 198, 0.12) 0%, transparent 45%),
+                linear-gradient(180deg, #16211b 0%, #101713 100%);
+        }
+
+        /* Контурный лотос на фоне */
+        .lotus-watermark {
+            position: fixed;
+            bottom: -60px;
+            right: -60px;
+            width: 340px;
+            height: 340px;
+            opacity: 0.12;
+            pointer-events: none;
+            z-index: -2;
+            animation: slowBreath 9s ease-in-out infinite;
+        }
+
+        @keyframes slowBreath {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.05) rotate(2deg); }
+        }
+
+        /* Падающие лепестки сакуры/лотоса */
+        .petals-layer {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .petal {
+            position: absolute;
+            background: linear-gradient(135deg, var(--pink-soft), var(--pink-main));
+            border-radius: 150% 0 150% 0;
+            opacity: 0;
+            animation: petalFall linear infinite;
+        }
+
+        @keyframes petalFall {
+            0% {
+                transform: translateY(-10vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            15% {
+                opacity: 0.55;
+            }
+            85% {
+                opacity: 0.35;
+            }
+            100% {
+                transform: translateY(110vh) translateX(45px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Стартовый экран открытия подарка */
+        #intro-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: radial-gradient(circle at 50% 40%, #1e2d24 0%, #111914 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 24px;
+            transition: opacity 0.9s ease, visibility 0.9s ease;
+        }
+
+        #intro-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .intro-tag {
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: var(--pink-main);
+            text-transform: uppercase;
+            margin-bottom: 22px;
+            opacity: 0.85;
+        }
+
+        .intro-title-wrap {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .intro-title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: clamp(26px, 6vw, 42px);
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--pink-main);
+            text-transform: uppercase;
+            line-height: 1.15;
+        }
+
+        .intro-script {
+            font-family: 'Marck Script', cursive;
+            font-size: clamp(26px, 5vw, 38px);
+            color: var(--pink-soft);
+            margin-top: -10px;
+            text-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .intro-desc {
+            max-width: 360px;
+            font-size: 14px;
+            line-height: 1.65;
+            color: var(--text-muted);
+            margin-bottom: 36px;
+        }
+
+        .open-gift-btn {
+            background: rgba(234, 179, 198, 0.12);
+            border: 1px solid var(--pink-main);
+            color: var(--pink-soft);
+            font-family: 'Unbounded', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            padding: 18px 36px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 0 30px rgba(234, 179, 198, 0.15);
+        }
+
+        .open-gift-btn:hover {
+            background: var(--pink-main);
+            color: var(--bg-deep);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 35px rgba(234, 179, 198, 0.35);
+        }
+
+        /* Плавающая кнопка звука */
+        .sound-btn {
+            position: fixed;
+            top: 18px;
+            right: 18px;
+            z-index: 60;
+            background: rgba(24, 36, 29, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-pink);
+            color: var(--pink-soft);
+            padding: 10px 16px;
+            border-radius: 30px;
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .sound-btn.visible {
+            display: flex;
+        }
+
+        .sound-btn:hover {
+            border-color: var(--pink-main);
+            background: rgba(38, 56, 46, 0.95);
+        }
+
+        .sound-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--pink-main);
+            animation: pulseDot 1.8s infinite;
+        }
+
+        .sound-btn.muted .sound-dot {
+            background: var(--text-muted);
+            animation: none;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.4; }
+        }
+
+        /* Основной контейнер страницы */
+        .page-wrapper {
+            max-width: 620px;
+            margin: 0 auto;
+            padding: 40px 20px 70px;
+            opacity: 0;
+            transform: translateY(25px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+
+        .page-wrapper.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Верхняя панель тегов в духе «Розовый Дзен» */
+        .top-tags {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin-bottom: 28px;
+            text-transform: uppercase;
+        }
+
+        /* Главная карточка сертификата */
+        .cert-hero {
+            background: linear-gradient(165deg, rgba(34, 50, 40, 0.9) 0%, rgba(20, 30, 24, 0.95) 100%);
+            border: 1px solid var(--border-pink);
+            border-radius: 22px;
+            padding: 42px 28px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        .cert-hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--pink-main), transparent);
+        }
+
+        .hero-headline {
+            font-family: 'Unbounded', sans-serif;
+            font-size: clamp(28px, 7vw, 44px);
+            font-weight: 700;
+            color: var(--pink-main);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            line-height: 1.05;
+        }
+
+        .hero-sub-script {
+            font-family: 'Marck Script', cursive;
+            font-size: clamp(28px, 6vw, 38px);
+            color: var(--pink-soft);
+            margin-top: -8px;
+            margin-bottom: 24px;
+        }
+
+        /* Поле ввода имени получательницы */
+        .name-field-wrap {
+            margin: 22px auto 12px;
+            max-width: 340px;
+        }
+
+        .name-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px dashed rgba(234, 179, 198, 0.45);
+            border-radius: 12px;
+            padding: 10px 14px;
+            color: var(--text-light);
+            font-family: 'Marck Script', cursive;
+            font-size: 30px;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .name-input::placeholder {
+            color: rgba(247, 219, 229, 0.45);
+        }
+
+        .name-input:focus {
+            border-style: solid;
+            border-color: var(--pink-main);
+            background: rgba(234, 179, 198, 0.08);
+        }
+
+        .name-hint {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        .brand-badge {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            background: rgba(234, 179, 198, 0.1);
+            color: var(--pink-soft);
+            font-size: 12px;
+            letter-spacing: 2px;
+        }
+
+        /* Блок благодарности и философии */
+        .gratitude-card {
+            background: rgba(26, 38, 31, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 20px;
+            padding: 30px 26px;
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .quote-mark {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 36px;
+            color: var(--pink-main);
+            opacity: 0.5;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .gratitude-text {
+            font-size: 14.5px;
+            line-height: 1.75;
+            color: var(--text-light);
+            font-weight: 300;
+        }
+
+        .gratitude-text strong {
+            color: var(--pink-soft);
+            font-weight: 500;
+        }
+
+        /* Сетка «Что входит в услугу» */
+        .program-section {
+            margin-bottom: 28px;
+        }
+
+        .section-heading {
+            text-align: center;
+            margin-bottom: 22px;
+        }
+
+        .section-heading h3 {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--pink-main);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .section-heading span {
+            font-family: 'Marck Script', cursive;
+            font-size: 24px;
+            color: var(--pink-soft);
+            display: block;
+            margin-top: -4px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        @media (max-width: 500px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .feature-item {
+            background: linear-gradient(145deg, rgba(36, 53, 43, 0.85), rgba(23, 34, 28, 0.9));
+            border: 1px solid var(--border-pink);
+            border-radius: 16px;
+            padding: 20px 18px;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-3px);
+            border-color: var(--pink-main);
+        }
+
+        .feature-num {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 11px;
+            color: var(--pink-main);
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+        }
+
+        .feature-title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--pink-soft);
+            margin-bottom: 6px;
+            line-height: 1.35;
+        }
+
+        .feature-desc {
+            font-size: 12.5px;
+            line-height: 1.55;
+            color: var(--text-muted);
+        }
+
+        /* Блок формулы равновесия (отсылка к референсу) */
+        .balance-card {
+            background: rgba(234, 179, 198, 0.08);
+            border: 1px solid var(--border-pink);
+            border-radius: 20px;
+            padding: 26px 24px;
+            margin-bottom: 30px;
+        }
+
+        .balance-title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--pink-main);
+            text-align: center;
+            margin-bottom: 18px;
+        }
+
+        .balance-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(234, 179, 198, 0.12);
+        }
+
+        .balance-row:last-child {
+            border-bottom: none;
+        }
+
+        .balance-left {
+            color: var(--pink-soft);
+            font-weight: 500;
+        }
+
+        .balance-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(234, 179, 198, 0.2), rgba(234, 179, 198, 0.6));
+            margin: 0 14px;
+            position: relative;
+        }
+
+        .balance-line::after {
+            content: '→';
+            position: absolute;
+            right: -4px;
+            top: -9px;
+            color: var(--pink-main);
+            font-size: 12px;
+        }
+
+        .balance-right {
+            color: var(--text-light);
+            text-align: right;
+        }
+
+        /* Кнопки действия */
+        .cta-block {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-primary {
+            display: block;
+            width: 100%;
+            background: var(--pink-main);
+            color: var(--bg-deep);
+            font-family: 'Unbounded', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+            text-decoration: none;
+            padding: 18px 24px;
+            border-radius: 50px;
+            transition: all 0.35s ease;
+            box-shadow: 0 12px 30px rgba(234, 179, 198, 0.25);
+        }
+
+        .btn-primary:hover {
+            background: var(--pink-soft);
+            transform: translateY(-2px);
+            box-shadow: 0 16px 36px rgba(234, 179, 198, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border-pink);
+            color: var(--pink-soft);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            letter-spacing: 1px;
+            padding: 13px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--pink-main);
+            background: rgba(234, 179, 198, 0.08);
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 32px;
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 1.5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-bg"></div>
+    <div class="petals-layer" id="petalsLayer"></div>
+
+    <!-- Фоновый цветок лотоса -->
+    <svg class="lotus-watermark" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M100 20C115 55 125 85 100 130C75 85 85 55 100 20Z" stroke="#eab3c6" stroke-width="1.5"/>
+        <path d="M100 130C135 110 160 80 170 50C140 60 115 85 100 130Z" stroke="#eab3c6" stroke-width="1.5"/>
+        <path d="M100 130C65 110 40 80 30 50C60 60 85 85 100 130Z" stroke="#eab3c6" stroke-width="1.5"/>
+        <path d="M100 130C145 130 175 115 190 95C160 95 130 105 100 130Z" stroke="#eab3c6" stroke-width="1.5"/>
+        <path d="M100 130C55 130 25 115 10 95C40 95 70 105 100 130Z" stroke="#eab3c6" stroke-width="1.5"/>
+    </svg>
+
+    <!-- Стартовый экран -->
+    <div id="intro-screen">
+        <div class="intro-tag">[ ТВОЯ ГАРМОНИЯ • ОСОБЕННЫЙ ПОДАРОК ]</div>
+        <div class="intro-title-wrap">
+            <div class="intro-title">СЕРТИФИКАТ</div>
+            <div class="intro-script">на разбор твоей уникальности</div>
+        </div>
+        <p class="intro-desc">Этот подарок уже оплачен с большой теплотой и заботой о тебе. Включи звук и открой своё приглашение.</p>
+        <button class="open-gift-btn" onclick="revealCertificate()">Открыть сертификат</button>
+    </div>
+
+    <!-- Кнопка звука -->
+    <button class="sound-btn" id="soundBtn" onclick="toggleSound()">
+        <span class="sound-dot"></span>
+        <span id="soundLabel">Звук: Вкл</span>
+    </button>
+
+    <!-- Основной контент сертификата -->
+    <main class="page-wrapper" id="mainPage">
+        <div class="top-tags">
+            <span>[ ГАРМОНИЯ ]</span>
+            <span>[ ЭСТЕТИКА ]</span>
+        </div>
+
+        <section class="cert-hero">
+            <h1 class="hero-headline">СЕРТИФИКАТ</h1>
+            <div class="hero-sub-script">для прекрасной</div>
+
+            <div class="name-field-wrap">
+                <input type="text" class="name-input" placeholder="Впиши своё имя..." aria-label="Имя получательницы">
+                <div class="name-hint">Нажми на поле, чтобы сделать сертификат именным</div>
+            </div>
+
+            <div class="brand-badge">@tipazh_style</div>
+        </section>
+
+        <section class="gratitude-card">
+            <div class="quote-mark">“</div>
+            <p class="gratitude-text">
+                Благодарим за доверие к твоей природной красоте. Этот сертификат — приглашение в пространство, где не нужно подстраиваться под чужие тренды. Мы бережно разберём <strong>твой типаж внешности</strong>, чтобы одежда, линии и оттенки всегда подчёркивали твою естественную силу и внутренний свет.
+            </p>
+        </section>
+
+        <section class="program-section">
+            <div class="section-heading">
+                <h3>Определение типажа</h3>
+                <span>что входит в твой разбор</span>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-num">[ 01 ]</div>
+                    <div class="feature-title">Твой лёгкий шопинг</div>
+                    <div class="feature-desc">Чёткое понимание своих фасонов, фактур и длины — без лишних примерок и случайных покупок.</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-num">[ 02 ]</div>
+                    <div class="feature-title">Твои образы</div>
+                    <div class="feature-desc">Гармоничные сочетания одежды, обуви и аксессуаров, которые работают на твою внешность.</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-num">[ 03 ]</div>
+                    <div class="feature-title">Твоя эстетика</div>
+                    <div class="feature-desc">Раскрытие природной геометрии лица, рекомендаций по причёске, макияжу и деталям.</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-num">[ 04 ]</div>
+                    <div class="feature-title">Твой вайб</div>
+                    <div class="feature-desc">Ощущение внутренней опоры и стиля, который звучит в унисон с твоим характером.</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="balance-card">
+            <div class="balance-title">Формула твоего стиля</div>
+            <div class="balance-row">
+                <span class="balance-left">Природные линии</span>
+                <span class="balance-line"></span>
+                <span class="balance-right">Точные силуэты</span>
+            </div>
+            <div class="balance-row">
+                <span class="balance-left">Типаж внешности</span>
+                <span class="balance-line"></span>
+                <span class="balance-right">Лёгкий выбор</span>
+            </div>
+            <div class="balance-row">
+                <span class="balance-left">Внутренний дзен</span>
+                <span class="balance-line"></span>
+                <span class="balance-right">Уверенность в себе</span>
+            </div>
+        </section>
+
+        <section class="cta-block">
+            <a href="https://t.me/ozbrny" target="_blank" rel="noopener" class="btn-primary">
+                Записаться на разбор @ozbrny
+            </a>
+            <button class="btn-secondary" id="copyNickBtn" onclick="copyTelegram()">
+                Скопировать ник @ozbrny
+            </button>
+        </section>
+
+        <footer class="footer-note">
+            [ СЕРТИФИКАТ ДЕЙСТВИТЕЛЕН НА ИНДИВИДУАЛЬНЫЙ РАЗБОР • @TIPAZH_STYLE ]
+        </footer>
+    </main>
+
+    <script>
+        // Создание парящих лепестков
+        const petalsLayer = document.getElementById('petalsLayer');
+        for (let i = 0; i < 18; i++) {
+            const petal = document.createElement('div');
+            petal.className = 'petal';
+            const size = 8 + Math.random() * 12;
+            petal.style.width = size + 'px';
+            petal.style.height = (size * 1.45) + 'px';
+            petal.style.left = Math.random() * 100 + 'vw';
+            petal.style.animationDuration = (8 + Math.random() * 9) + 's';
+            petal.style.animationDelay = (Math.random() * 7) + 's';
+            petalsLayer.appendChild(petal);
+        }
+
+        // Генеративный дзен-эмбиент (поющие чаши на Web Audio API)
+        let audioCtx = null;
+        let masterGain = null;
+        let chimeInterval = null;
+        let isMuted = false;
+
+        function startZenAudio() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContext();
+                masterGain = audioCtx.createGain();
+                masterGain.gain.setValueAtTime(0.18, audioCtx.currentTime);
+                masterGain.connect(audioCtx.destination);
+
+                // Мягкий фоновый гул (дроун)
+                const droneFreqs = [174.61, 261.63]; // F3 и C4
+                droneFreqs.forEach(freq => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                    osc.connect(gain);
+                    gain.connect(masterGain);
+                    osc.start();
+                });
+
+                // Периодические переливы поющих чаш
+                const bowlNotes = [392.00, 440.00, 523.25, 587.33, 659.25];
+                const playChime = () => {
+                    if (!audioCtx || isMuted) return;
+                    const now = audioCtx.currentTime;
+                    const note = bowlNotes[Math.floor(Math.random() * bowlNotes.length)];
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(note, now);
+
+                    gain.gain.setValueAtTime(0.0001, now);
+                    gain.gain.exponentialRampToValueAtTime(0.12, now + 0.6);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + 4.5);
+
+                    osc.connect(gain);
+                    gain.connect(masterGain);
+                    osc.start(now);
+                    osc.stop(now + 4.6);
+                };
+
+                playChime();
+                chimeInterval = setInterval(playChime, 4200);
+            } catch (e) {
+                console.log('Audio init skipped:', e);
+            }
+        }
+
+        function revealCertificate() {
+            document.getElementById('intro-screen').classList.add('hidden');
+            document.getElementById('mainPage').classList.add('revealed');
+            document.getElementById('soundBtn').classList.add('visible');
+            startZenAudio();
+        }
+
+        function toggleSound() {
+            if (!audioCtx || !masterGain) return;
+            const btn = document.getElementById('soundBtn');
+            const label = document.getElementById('soundLabel');
+
+            if (!isMuted) {
+                masterGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.2);
+                btn.classList.add('muted');
+                label.textContent = 'Звук: Выкл';
+                isMuted = true;
+            } else {
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                masterGain.gain.setTargetAtTime(0.18, audioCtx.currentTime, 0.2);
+                btn.classList.remove('muted');
+                label.textContent = 'Звук: Вкл';
+                isMuted = false;
+            }
+        }
+
+        function copyTelegram() {
+            navigator.clipboard.writeText('@ozbrny').then(() => {
+                const btn = document.getElementById('copyNickBtn');
+                const original = btn.textContent;
+                btn.textContent = 'Ник @ozbrny скопирован ✓';
+                setTimeout(() => {
+                    btn.textContent = original;
+                }, 2200);
+            });
+        }
+    </script>
+</body>
+</html>
